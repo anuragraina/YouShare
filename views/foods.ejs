@@ -1,0 +1,19 @@
+<%- include('partials/header') %> 
+<h1>You're viewing data.</h1>
+
+<div>
+    <a href="/foods/new">Add new item</a>
+</div>
+
+<% foods.forEach((item)=>{ %>
+
+    <div>
+        <h2><%= item.name %></h3>
+        <img src='<%= item.image %> '>
+    </div>
+
+<% }) %>
+
+<a href='/'>Home Page</a>
+
+<%- include('partials/footer') %> 
