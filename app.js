@@ -4,6 +4,7 @@ const express = require('express'),
       bodyParser = require("body-parser"),
       mongoose = require("mongoose"),
       Food = require("./models/foods"),
+      Comment = require("./models/comments"),
       seedDb = require("./seeds");
 
 
@@ -24,7 +25,7 @@ app.get('/foods',(req,res)=>{
             console.log("Error finding food!!!");
         }
         else{
-            res.render('foods',{foods:allFoods})
+            res.render('foods/foods',{foods:allFoods})
         }
     })
 });
@@ -39,22 +40,52 @@ app.post('/foods',(req,res)=>{
             console.log("Added food successfully...")
         }
     })
-    res.redirect('/foods');
+    res.redirect('foods/foods');
 });
 
-app.get('/foods/new',(req,res)=>res.render("new"));
+app.get('/foods/new',(req,res)=>res.render("foods/new"));
 
 app.get("/foods/:id",(req,res)=>{
 
     Food.findById(req.params.id).populate("comments").exec((err,foundFood)=>{
         if(err){
             console.log("Food item not found!!!");
-            res.redirect("/foods");
+            res.redirect("foods/foods");
         }
         else{
-            res.render('show',{food:foundFood});
+            res.render('foods/show',{food:foundFood});
         }
     })
 });
 
-app.listen(port,()=>console.log('YouShare server running on port '+port+'...'))
+app.get("/foods/:id/comments/new",(req,res)=>{
+
+    Food.findById(req.params.id,(err,foundFood)=>{
+        if(err)
+        console.log(err);
+
+        else{
+            res.render("comments/new",{food:foundFood});
+        }
+    })
+})
+
+app.post("/foods/:id/comments",(req,res)=>{
+    
+    Food.findById(req.params.id,(err,foundFood)=>{
+        if(err)
+        console.log(err);
+
+        else{
+            Comment.create(req.body.comment,(err,addedComment)=>{
+                foundFood.comments.push(addedComment);
+                foundFood.save();
+
+                res.redirect("/foods/"+foundFood._id);
+            })
+        }
+    })
+})
+
+
+app.listen(port,()=>console.log('YouShare server running on port '+port+'...'));

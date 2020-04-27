@@ -1,12 +1,15 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 
-<div class="container" style="width:30%">
+<div class="container justify-content-center" style="width:50%">
     <h1><%= food.name %></h1>
     <img src="<%= food.image %>">
     <p style="margin-top:20px;"><%= food.description %></p>
+
     <% food.comments.forEach(comment => { %>      
         <p><strong><%= comment.author %></strong> - <%= comment.text %> </p>
     <%  });  %> 
+
+    <a href="/foods/<%= food._id %>/comments/new" class="btn btn-primary btn-sm">Add a new comment</a>
 </div> 
 
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>
