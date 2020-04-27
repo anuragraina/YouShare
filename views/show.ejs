@@ -3,7 +3,10 @@
 <div class="container" style="width:30%">
     <h1><%= food.name %></h1>
     <img src="<%= food.image %>">
-    <p style="margin-top:20px;"><%= food.description %> </p>
+    <p style="margin-top:20px;"><%= food.description %></p>
+    <% food.comments.forEach(comment => { %>      
+        <p><strong><%= comment.author %></strong> - <%= comment.text %> </p>
+    <%  });  %> 
 </div> 
 
 <%- include('partials/footer') %>
