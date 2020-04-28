@@ -10,7 +10,8 @@ const express = require('express'),
 
 mongoose.connect('mongodb://localhost:27017/YouShare', {useNewUrlParser: true, useUnifiedTopology: true});
 app.use(bodyParser.urlencoded({extended:true}));
-app.set('view engine','ejs')
+app.set('view engine','ejs');
+app.use(express.static(__dirname+'/public'));
 
 seedDb();
 
