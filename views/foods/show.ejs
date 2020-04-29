@@ -16,6 +16,7 @@
                 <div class="card-body">
                     <h3 class="card-title"><%= food.name %></h3>
                     <p class="card-text"><%= food.description %></p>
+                    <p class="card-text"><em>Submitted by <%= food.author.username %></em></p>
                 </div>
             </div>
             <div class="card bg-light">
@@ -30,7 +31,7 @@
                     <% food.comments.forEach(comment => { %>
                         <div class="row">
                             <div class="col-md-12">
-                                <strong class="float-left"><%= comment.author %></strong>
+                                <strong class="float-left"><%= comment.author.username %></strong>
                                 <span class="float-right">10 days ago</span>
                                 <br>
                                 <p class="float-none"><%= comment.text %></p>
