@@ -50,10 +50,36 @@ router.get('/:id', (req, res) => {
 	});
 });
 
+router.get('/:id/edit', isOwner, (req, res) => {
+	Food.findById(req.params.id, (err, foundFood) => res.render('foods/edit', { food: foundFood }));
+});
+
+router.put('/:id', isOwner, (req, res) => {
+	Food.findByIdAndUpdate(req.params.id, req.body.food, (err, updatedFood) => res.redirect('/foods/' + req.params.id));
+});
+
+router.delete('/:id', isOwner, (req, res) => {
+	Food.findByIdAndDelete(req.params.id, () => res.redirect('/foods'));
+});
+
 //middleware
 function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) return next();
 	else res.redirect('/login');
+}
+
+function isOwner(req, res, next) {
+	if (req.isAuthenticated()) {
+		Food.findById(req.params.id, (err, foundFood) => {
+			if (err) {
+				console.log(err);
+				res.redirect('back');
+			} else {
+				if (foundFood.author.id.equals(req.user._id)) return next();
+				else res.send('You are not authorised!!!');
+			}
+		});
+	} else res.redirect('back');
 }
 
 module.exports = router;

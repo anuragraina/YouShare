@@ -5,6 +5,7 @@ const express = require('express'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local'),
+	methodOverride = require('method-override'),
 	Food = require('./models/foods'),
 	Comment = require('./models/comments'),
 	User = require('./models/users'),
@@ -15,7 +16,11 @@ const commentRoutes = require('./routes/comments'),
 	foodRoutes = require('./routes/foods'),
 	indexRoutes = require('./routes/index');
 
-mongoose.connect('mongodb://localhost:27017/YouShare', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/YouShare', {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useFindAndModify: false
+});
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
@@ -42,6 +47,8 @@ app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
 	next();
 });
+
+app.use(methodOverride('_method'));
 
 app.use('/', indexRoutes);
 app.use('/foods', foodRoutes);

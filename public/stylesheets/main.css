@@ -1,8 +1,16 @@
-.card{
-    margin-top: 10px;
+.card {
+	margin-top: 10px;
 }
 
-#form{
-    width: 30%;
-    margin:20px,auto;
+#form {
+	width: 30%;
+	margin: 20px, auto;
+}
+
+.btn {
+	font-weight: 500;
+}
+
+#delete-form {
+	display: inline;
 }

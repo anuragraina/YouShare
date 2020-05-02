@@ -17,6 +17,14 @@
                     <h3 class="card-title"><%= food.name %></h3>
                     <p class="card-text"><%= food.description %></p>
                     <p class="card-text"><em>Submitted by <%= food.author.username %></em></p>
+                    
+                    <% if (currentUser && food.author.id.equals(currentUser._id)) { %>
+                        <a href="/foods/<%= food._id %>/edit " class="btn btn-warning">Edit</a>
+                        <form id="delete-form" action="/foods/<%= food._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>                     
+                    <% } %> 
+
                 </div>
             </div>
             <div class="card bg-light">
@@ -24,7 +32,7 @@
                     <div class="row align-items-start">
                         <div class="col-md-12">
                             <h3 class="card-title float-left">Comments</h3>
-                            <a href="/foods/<%= food._id %>/comments/new" class="btn btn-success btn-sm float-right">Add a new comment</a>
+                            <a href="/foods/<%= food._id %>/comments/new" class="btn btn-outline-info btn-sm float-right">Add a new comment</a>
                         </div>                        
                     </div>
                     <hr>
@@ -35,6 +43,14 @@
                                 <span class="float-right">10 days ago</span>
                                 <br>
                                 <p class="float-none"><%= comment.text %></p>
+                                
+                                <% if (currentUser && comment.author.id.equals(currentUser._id)) { %>
+                                    <a href="/foods/<%= food._id %>/comments/<%= comment._id %>/edit " class="btn btn-outline-warning btn-sm">Edit</a>
+                                    <form id="delete-form" action="/foods/<%= food._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                        <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                    </form>
+                                <% } %>
+                                
                             </div>
                         </div>
                     <%  });  %>    
