@@ -1,10 +1,11 @@
 const express = require('express'),
 	router = express.Router({ mergeParams: true }),
 	Food = require('../models/foods'),
-	Comment = require('../models/comments');
+	Comment = require('../models/comments'),
+	middlewareObj = require('../middleware');
 
 //Comments new
-router.get('/new', isLoggedIn, (req, res) => {
+router.get('/new', middlewareObj.isLoggedIn, (req, res) => {
 	Food.findById(req.params.id, (err, foundFood) => {
 		if (err) console.log(err);
 		else {
@@ -14,7 +15,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 });
 
 //Comments create
-router.post('/', isLoggedIn, (req, res) => {
+router.post('/', middlewareObj.isLoggedIn, (req, res) => {
 	Food.findById(req.params.id, (err, foundFood) => {
 		if (err) console.log(err);
 		else {
@@ -35,13 +36,13 @@ router.post('/', isLoggedIn, (req, res) => {
 	});
 });
 
-router.get('/:comment_id/edit', isOwner, (req, res) => {
+router.get('/:comment_id/edit', middlewareObj.isCommentOwner, (req, res) => {
 	Comment.findById(req.params.comment_id, (err, foundComment) =>
 		res.render('comments/edit', { food_id: req.params.id, comment: foundComment })
 	);
 });
 
-router.put('/:comment_id', isOwner, (req, res) => {
+router.put('/:comment_id', middlewareObj.isCommentOwner, (req, res) => {
 	Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, (err, updatedComment) => {
 		if (err) {
 			console.log(err);
@@ -52,7 +53,7 @@ router.put('/:comment_id', isOwner, (req, res) => {
 	});
 });
 
-router.delete('/:comment_id', isOwner, (req, res) => {
+router.delete('/:comment_id', middlewareObj.isCommentOwner, (req, res) => {
 	Comment.findByIdAndDelete(req.params.comment_id, (err) => {
 		if (err) {
 			console.log(err);
@@ -60,25 +61,5 @@ router.delete('/:comment_id', isOwner, (req, res) => {
 		} else res.redirect('/foods/' + req.params.id);
 	});
 });
-
-//middleware
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated()) next();
-	else res.redirect('/login');
-}
-
-function isOwner(req, res, next) {
-	if (req.isAuthenticated()) {
-		Comment.findById(req.params.comment_id, (err, foundComment) => {
-			if (err) {
-				console.log(err);
-				res.redirect('back');
-			} else {
-				if (foundComment.author.id.equals(req.user._id)) next();
-				else res.redirect('back');
-			}
-		});
-	} else res.redirect('back');
-}
 
 module.exports = router;

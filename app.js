@@ -1,14 +1,15 @@
 const express = require('express'),
 	app = express(),
-	port = 3000,
+	PORT = process.env.PORT || 8080,
 	bodyParser = require('body-parser'),
-	mongoose = require('mongoose'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local'),
 	methodOverride = require('method-override'),
+	flash = require('connect-flash'),
 	Food = require('./models/foods'),
 	Comment = require('./models/comments'),
 	User = require('./models/users'),
+	connectDB = require('./config/db'),
 	seedDb = require('./seeds');
 
 //Requiring routes
@@ -16,14 +17,12 @@ const commentRoutes = require('./routes/comments'),
 	foodRoutes = require('./routes/foods'),
 	indexRoutes = require('./routes/index');
 
-mongoose.connect('mongodb://localhost:27017/YouShare', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false
-});
+connectDB();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+app.use(flash());
 
 //seedDb();   //seed database
 
@@ -37,6 +36,7 @@ app.use(
 		saveUninitialized : false
 	})
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -45,6 +45,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
+	res.locals.error = req.flash('error');
+	res.locals.success = req.flash('success');
 	next();
 });
 
@@ -54,4 +56,4 @@ app.use('/', indexRoutes);
 app.use('/foods', foodRoutes);
 app.use('/foods/:id/comments', commentRoutes);
 
-app.listen(port, () => console.log('YouShare server running on port ' + port + '...'));
+app.listen(PORT, () => console.log(`YouShare server running on port ${PORT}`));

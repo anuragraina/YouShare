@@ -33,12 +33,8 @@ router.post(
 
 router.get('/logout', (req, res) => {
 	req.logOut();
+	req.flash('success', 'Logged out successfully');
 	res.redirect('/foods');
 });
-
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated()) return next();
-	else res.redirect('/login');
-}
 
 module.exports = router;
