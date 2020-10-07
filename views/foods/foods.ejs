@@ -1,33 +1,30 @@
 <%- include('../partials/header') %>
 
 <div class="container">
-    <header class="jumbotron">
-        <h1>Welcome to YouShare!</h1>
-        <p>Display and show off your creativity here!!!</p>
-        <p>
-            <a class="btn btn-primary" href="/foods/new">Add new item</a>
-        </p>
-    </header>
-    
-    <div class="row text-center">
-        <% foods.forEach((item)=>{ %>
-            <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                <div class="card" style="width: 14rem;">
-                    <img class="card-img-top" src="<%= item.image %>">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= item.name %></h5>
-                        <p class="card-text"><%= item.description.slice(0,100) %> </p>
-                        <a href="/foods/<%= item._id %>" class="btn btn-primary btn-sm">More Info</a>
-                    </div>
-                </div>
-            </div>            
-        <% }) %>
-    </div>
-    
-    
-    <a href='/'>Home Page</a>
+	<header class="jumbotron">
+		<h1>Welcome to YouShare!</h1>
+		<p>Display and show off your creativity here!!!</p>
+		<p>
+			<a class="btn btn-primary" href="/foods/new">Add a new Blog</a>
+		</p>
+	</header>
+
+	<div class="row text-center">
+		<% foods.forEach((item)=>{ %>
+		<div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+			<div class="card" style="width: 14rem">
+				<img class="card-img-top" src="<%= item.image %>" />
+				<div class="card-body">
+					<h5 class="card-title"><%= item.name %></h5>
+					<p class="card-text"><%= item.description.slice(0,100) %></p>
+					<a href="/foods/<%= item._id %>" class="btn btn-primary btn-sm">More Info</a>
+				</div>
+			</div>
+		</div>
+		<% }) %>
+	</div>
+
+	<a href="/">Home Page</a>
 </div>
 
-
-
-<%- include('../partials/footer') %> 
+<%- include('../partials/footer') %>
